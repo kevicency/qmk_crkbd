@@ -31,8 +31,8 @@ enum layers {
 
 enum tap_dance_codes {
     DANCE_DOT_COMM,
-    DANCE_EQL_Z,
-    DANCE_TAB
+    DANCE_TAB,
+    DANCE_SLSH_TILDE
 };
 
 // Base Layers
@@ -84,6 +84,7 @@ enum tap_dance_codes {
 
 #define TD_DOT TD(DANCE_DOT_COMM)
 #define TD_TAB TD(DANCE_TAB)
+#define TD_SLSH TD(DANCE_SLSH_TILDE)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_COLEMAK] = LAYOUT_split_3x6_3(
@@ -92,7 +93,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
        KC_ESC,    KC_A,    KC_R,    MT_S,    MT_T,    KC_G,                         KC_M,    MT_N,    MT_E,    KC_I,    KC_O,  KC_ENT,\
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-       MT_EQL,    KC_Z,    KC_X,    KC_C,    KC_D,    KC_V,                         KC_K,    KC_H, KC_COMM,  KC_DOT, KC_SLSH,  MT_GRV,\
+       MT_EQL,    KC_Z,    KC_X,    KC_C,    KC_D,    KC_V,                         KC_K,    KC_H, KC_COMM,  KC_DOT, TD_SLSH,  MT_GRV,\
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                          OSM_LSFT,   T_NUM,  MT_SPC,    KC_BSPC,   T_SYM, OSM_RSFT
                                       //`--------------------------'  `--------------------------'
@@ -320,7 +321,7 @@ enum {
     MORE_TAPS
 };
 
-static tap dance_state[1];
+static tap dance_state[2];
 
 uint8_t dance_step(qk_tap_dance_state_t *state);
 uint8_t dance_step(qk_tap_dance_state_t *state) {
@@ -372,11 +373,11 @@ void dance_tab_reset(qk_tap_dance_state_t *state, void *user_data) {
     dance_state[0].step = 0;
 }
 
-void on_dance_3(qk_tap_dance_state_t *state, void *user_data);
-void dance_3_finished(qk_tap_dance_state_t *state, void *user_data);
-void dance_3_reset(qk_tap_dance_state_t *state, void *user_data);
+void on_dance_slsh(qk_tap_dance_state_t *state, void *user_data);
+void dance_slsh_finished(qk_tap_dance_state_t *state, void *user_data);
+void dance_slsh_reset(qk_tap_dance_state_t *state, void *user_data);
 
-void on_dance_3(qk_tap_dance_state_t *state, void *user_data) {
+void on_dance_slsh(qk_tap_dance_state_t *state, void *user_data) {
 	if(state->count == 3) {
 		tap_code16(KC_SLASH);
 		tap_code16(KC_SLASH);
@@ -387,7 +388,7 @@ void on_dance_3(qk_tap_dance_state_t *state, void *user_data) {
 	}
 }
 
-void dance_3_finished(qk_tap_dance_state_t *state, void *user_data) {
+void dance_slsh_finished(qk_tap_dance_state_t *state, void *user_data) {
     dance_state[1].step = dance_step(state);
 	switch (dance_state[1].step) {
 		case SINGLE_TAP: register_code16(KC_SLASH); break;
@@ -397,7 +398,7 @@ void dance_3_finished(qk_tap_dance_state_t *state, void *user_data) {
 	}
 }
 
-void dance_3_reset(qk_tap_dance_state_t *state, void *user_data) {
+void dance_slsh_reset(qk_tap_dance_state_t *state, void *user_data) {
 	wait_ms(10);
 	switch (dance_state[1].step) {
 		case SINGLE_TAP: unregister_code16(KC_SLASH); break;
@@ -410,6 +411,6 @@ void dance_3_reset(qk_tap_dance_state_t *state, void *user_data) {
 
 qk_tap_dance_action_t tap_dance_actions[] = {
     [DANCE_DOT_COMM] = ACTION_TAP_DANCE_DOUBLE(KC_DOT, KC_COMM),
-    [DANCE_EQL_Z] = ACTION_TAP_DANCE_DOUBLE(KC_EQL, KC_Z),
-    [DANCE_TAB] = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_tab, dance_tab_finished, dance_tab_reset)
+    [DANCE_TAB] = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_tab, dance_tab_finished, dance_tab_reset),
+    [DANCE_SLSH_TILDE] = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_slsh, dance_slsh_finished, dance_slsh_reset),
 };
