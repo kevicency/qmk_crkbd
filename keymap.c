@@ -17,9 +17,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include QMK_KEYBOARD_H
+#include <stdio.h>
 
 enum layers {
     _COLEMAK = 0,
+    _GAMING,
+    _GAMING_EXT,
     _SYM,
     _NUM,
     _NAV,
@@ -34,9 +37,11 @@ enum tap_dance_codes {
 
 // Base Layers
 #define COLEMAK DF(_COLEMAK)
-// #define GAMING  DF(_GAMING)
+#define GAMING  DF(_GAMING)
 
 #define TO_COLE TO(_COLEMAK)
+#define TO_GAME TO(_GAMING)
+#define TO_UTIL TO(_UTIL)
 
 // Other Layers
 #define T_SYM TT(_SYM)
@@ -48,8 +53,11 @@ enum tap_dance_codes {
 #define S_NAV MO(_NAV)
 #define S_UTIL MO(_UTIL)
 
+#define EXT_SL LT(_GAMING_EXT, KC_SLSH)
+
 #define TAB_FWD RCTL(KC_TAB)
 #define TAB_BCK LCTL(LSFT(KC_TAB))
+#define TAB_CLS LGUI(KC_W)
 #define NAV_FWD LGUI(KC_RBRACKET)
 #define NAV_BCK LGUI(KC_LBRACKET)
 
@@ -72,6 +80,7 @@ enum tap_dance_codes {
 #define KC_CUT LGUI(KC_X)
 #define KC_UNDO LGUI(KC_Z)
 #define KC_PST LGUI(KC_V)
+#define KC_EUR ALGR(KC_5)   
 
 #define TD_DOT TD(DANCE_DOT_COMM)
 #define TD_TAB TD(DANCE_TAB)
@@ -87,21 +96,44 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                          OSM_LSFT,   T_NUM,  MT_SPC,    KC_BSPC,   T_SYM, OSM_RSFT
                                       //`--------------------------'  `--------------------------'
-
   ),
+
+  [_GAMING] = LAYOUT_split_3x6_3(
+  //,-----------------------------------------------------.                    ,-----------------------------------------------------.
+       KC_TAB,    KC_Q,    KC_W,    KC_F,    KC_P,    KC_B,                         KC_J,    KC_L,    KC_U,    KC_Y, KC_SCLN, KC_BSPC,\
+  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
+       KC_ESC,    KC_A,    KC_R,    KC_S,    KC_T,    KC_G,                         KC_M,    KC_N,    KC_E,    KC_I,    KC_O,  KC_ENT,\
+  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
+      KC_LSFT,    KC_Z,    KC_X,    KC_C,    KC_D,    KC_V,                         KC_K,    KC_H, KC_COMM,  KC_DOT, KC_SLSH, KC_RSFT,\
+  //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
+                                          KC_LALT,  EXT_SL,  MT_SPC,    KC_BSPC,   EXT_SL, KC_RALT
+                                      //`--------------------------'  `--------------------------'
+  ), 
+  
+  [_GAMING_EXT] = LAYOUT_split_3x6_3(
+  //,-----------------------------------------------------.                    ,-----------------------------------------------------.
+       KC_GRV,    KC_1,    KC_2, _______,    KC_3,    KC_4,                      _______, _______, _______, _______, _______, _______,\
+  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
+      _______,    KC_5, _______, _______, _______,    KC_6,                      _______, _______, _______, _______, _______, _______,\
+  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
+      _______,    KC_7,    KC_8,    KC_9,    KC_0, KC_MINS,                      _______, _______, _______, _______, _______, _______,\
+  //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
+                                       _______,   _______,  _______,    _______, TO_UTIL, _______
+                                      //`--------------------------'  `--------------------------'
+  ),      
 
   [_SYM] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-       KC_GRV, KC_EXLM,   KC_AT, KC_HASH,  KC_DLR, KC_PERC,                      KC_CIRC, KC_AMPR,  KC_ASTR, KC_UNDS, KC_COLN, KC_DQUO,
+       KC_GRV, KC_EXLM,   KC_AT, KC_HASH,  KC_DLR, KC_PERC,                      KC_CIRC, KC_AMPR, KC_ASTR, KC_UNDS, KC_COLN, KC_DQUO,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       _______,   KC_LT, KC_LCBR, KC_LBRC, KC_LPRN, KC_PIPE,                      KC_BSLS, KC_RPRN, KC_RBRC, KC_RCBR,   KC_GT, _______,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      _______,  KC_EQL, KC_PLUS, KC_MINS,    KC_0, KC_LEFT,                      KC_RGHT,    KC_1, KC_COMM,  KC_DOT, KC_SLSH, KC_TILD,
+      _______, KC_PLUS, KC_MINS,  KC_EUR ,   KC_0, KC_LEFT,                      KC_RGHT,    KC_1, KC_COMM,  KC_DOT, KC_SLSH, KC_TILD,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          _______, _______, _______,    _______,   S_SYM, _______
+                                          KC_LSFT, _______, _______,    _______,   S_SYM, _______
                                       //`--------------------------'  `--------------------------'
   ),
-
+ 
   [_NUM] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
        KC_TAB, XXXXXXX, KC_LPRN, KC_UP,   KC_RPRN, KC_PGUP,                         KC_R,    KC_7,    KC_8,    KC_9, KC_MINS, KC_PLUS,
@@ -116,23 +148,23 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_NAV] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-       TD_TAB, XXXXXXX, KC_WH_L, KC_MS_U, KC_WH_R, KC_WH_U,                      NAV_BCK, TAB_BCK, TAB_FWD, NAV_FWD, KC_ACL0,   S_NAV,
+       TD_TAB, XXXXXXX, KC_WH_L, KC_MS_U, KC_WH_R, KC_WH_U,                      NAV_BCK, TAB_BCK, TAB_FWD, NAV_FWD, TAB_CLS,   S_NAV,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      _______, XXXXXXX, KC_MS_L, KC_MS_D, KC_MS_R, KC_WH_D,                    TO(_UTIL), KC_BTN1, KC_BTN2, KC_BTN3, KC_ACL1, _______,
+      _______, XXXXXXX, KC_MS_L, KC_MS_D, KC_MS_R, KC_WH_D,                      XXXXXXX, KC_BTN1, KC_BTN2, KC_BTN3, KC_RGUI, _______,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      _______, KC_UNDO,  KC_CUT, KC_COPY,  TD_DOT,  KC_PST,                    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_ACL2, _______,
+      _______, KC_UNDO,  KC_CUT, KC_COPY,  TD_DOT,  KC_PST,                      TO_UTIL, KC_ACL0, KC_ACL1, KC_ACL2, XXXXXXX, _______,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          _______, _______, _______,    _______, _______, _______
+                                          KC_LSFT, _______, _______,    _______, _______, KC_RSFT
                                       //`--------------------------'  `--------------------------'
   ),
 
   [_UTIL] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      XXXXXXX, KC_BRMU, KC_MPRV, KC_VOLU, KC_MNXT, XXXXXXX,                      XXXXXXX, QK_MAKE, QK_FLSH, XXXXXXX, XXXXXXX,  S_UTIL,
+      XXXXXXX, KC_BRMU, KC_MPRV, KC_VOLU, KC_MNXT,  GAMING,                      TO_GAME, QK_MAKE, QK_FLSH, XXXXXXX, XXXXXXX,  S_UTIL,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       _______, KC_BRMD, KC_MPLY, KC_VOLD, KC_MSTP, COLEMAK,                      TO_COLE, RGB_MOD, RGB_HUI, RGB_SAI, RGB_VAI, _______,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_SLEP, XXXXXXX, XXXXXXX, KC_MUTE, XXXXXXX, XXXXXXX,                      XXXXXXX, RGB_TOG, RGB_HUD, RGB_SAD, RGB_VAD, XXXXXXX,
+      KC_SLEP, XXXXXXX, XXXXXXX, KC_MUTE, XXXXXXX, XXXXXXX,                      TO_COLE, RGB_TOG, RGB_HUD, RGB_SAD, RGB_VAD, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                           _______, _______, _______,    _______, _______, _______
                                       //`--------------------------'  `--------------------------'
@@ -162,11 +194,18 @@ layer_state_t layer_state_set_user(layer_state_t state) {
             case _COLEMAK:
                 oled_write_P(PSTR("COLEMAK: "), false);
                 break;
+            case _GAMING:
+                oled_write_P(PSTR("GAMING:  "), false);
+                break;
         }
         // oled_write_ln_P(PSTR(layer_state), false);
         switch (get_highest_layer(layer_state|default_layer_state)) {
             case _COLEMAK:
-                oled_write_ln_P(PSTR("Type "), false);
+            case _GAMING:
+                oled_write_ln_P(PSTR("Base "), false);
+                break;
+            case _GAMING_EXT:
+                oled_write_ln_P(PSTR("Ext  "), false);
                 break;
             case _SYM:
                 oled_write_ln_P(PSTR("Sym  "), false);
@@ -195,7 +234,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     }
 
 
-    char keylog_str[24] = {};
+    char keylog_str[12] = {};
 
     const char code_to_name[60] = {
         ' ', ' ', ' ', ' ', 'a', 'b', 'c', 'd', 'e', 'f',
@@ -214,8 +253,8 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     }
 
     // update keylog
-    snprintf(keylog_str, sizeof(keylog_str), "%c: k%2d, %dx%d",
-            name, keycode, record->event.key.row, record->event.key.col);
+    snprintf(keylog_str, sizeof(keylog_str), "%c: k%2d",
+            name, keycode);
     }
 
     void oled_render_keylog(void) {
