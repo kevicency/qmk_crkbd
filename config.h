@@ -34,12 +34,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define RETRO_TAPPING
 #define TAPPING_TERM 175
 #define TAPPING_TOGGLE 2
-#define MOUSEKEY_DELAY 0
-#define MOUSEKEY_INTERVAL 16
-#define MOUSEKEY_MAX_SPEED 6
-#define MOUSEKEY_TIME_TO_MAX 36
-#define MOUSEKEY_WHEEL_MAX_SPEED 4
-#define MOUSEKEY_WHEEL_TIME_TO_MAX 100
+
+#define MOUSEKEY_INTERVAL       20
+#define MOUSEKEY_DELAY          10
+#define MOUSEKEY_TIME_TO_MAX    45
+#define MOUSEKEY_MAX_SPEED      7
+#define MOUSEKEY_WHEEL_DELAY    10
 
 #ifdef RGBLIGHT_ENABLE
     #define RGBLIGHT_EFFECT_BREATHING
@@ -51,6 +51,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     #define RGBLIGHT_VAL_STEP 17
     #define RGBLIGHT_DEFAULT_HUE 215
     #define RGBLIGHT_DEFAULT_MODE RGBLIGHT_MODE_BREATHING
+    #define RGBLIGHT_SLEEP true
 #endif
 
 #ifdef RGB_MATRIX_ENABLE

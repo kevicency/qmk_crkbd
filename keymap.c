@@ -39,9 +39,9 @@ enum tap_dance_codes {
 #define COLEMAK DF(_COLEMAK)
 #define GAMING  DF(_GAMING)
 
-#define TO_COLE TO(_COLEMAK)
-#define TO_GAME TO(_GAMING)
+#define TO_DFLT TO(0)
 #define TO_UTIL TO(_UTIL)
+#define TO_NAV  TO(_NAV)
 
 // Other Layers
 #define T_SYM TT(_SYM)
@@ -51,7 +51,9 @@ enum tap_dance_codes {
 #define S_NUM MO(_NUM)
 
 #define S_NAV MO(_NAV)
+#define T_NAV TT(_NAV)
 #define S_UTIL MO(_UTIL)
+#define T_UTIL TT(_UTIL)
 
 #define EXT_SL LT(_GAMING_EXT, KC_SLSH)
 
@@ -149,9 +151,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_NAV] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-       TD_TAB, XXXXXXX, KC_WH_L, KC_MS_U, KC_WH_R, KC_WH_U,                      NAV_BCK, TAB_BCK, TAB_FWD, NAV_FWD, TAB_CLS,   S_NAV,
+       TD_TAB, XXXXXXX, KC_WH_L, KC_MS_U, KC_WH_R, KC_WH_U,                      NAV_BCK, TAB_BCK, TAB_FWD, NAV_FWD, TAB_CLS,  TO_NAV,      
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      _______, XXXXXXX, KC_MS_L, KC_MS_D, KC_MS_R, KC_WH_D,                      XXXXXXX, KC_BTN1, KC_BTN2, KC_BTN3, KC_RGUI, _______,
+      _______, XXXXXXX, KC_MS_L, KC_MS_D, KC_MS_R, KC_WH_D,                       TO_NAV, KC_BTN1, KC_BTN2, KC_BTN3, KC_RGUI, _______,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       _______, KC_UNDO,  KC_CUT, KC_COPY,  TD_DOT,  KC_PST,                      TO_UTIL, KC_ACL0, KC_ACL1, KC_ACL2, XXXXXXX, _______,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
@@ -161,11 +163,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_UTIL] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      XXXXXXX, KC_BRMU, KC_MPRV, KC_VOLU, KC_MNXT,  GAMING,                      TO_GAME, QK_MAKE, QK_FLSH, XXXXXXX, XXXXXXX,  S_UTIL,
+      XXXXXXX, KC_BRMU, KC_MPRV, KC_VOLU, KC_MNXT,  GAMING,                      TO_DFLT, QK_MAKE, QK_FLSH, XXXXXXX, XXXXXXX, TO_DFLT,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      _______, KC_BRMD, KC_MPLY, KC_VOLD, KC_MSTP, COLEMAK,                      TO_COLE, RGB_MOD, RGB_HUI, RGB_SAI, RGB_VAI, _______,
+      _______, KC_BRMD, KC_MPLY, KC_VOLD, KC_MSTP, COLEMAK,                      TO_DFLT, RGB_MOD, RGB_HUI, RGB_SAI, RGB_VAI, _______,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_SLEP, XXXXXXX, XXXXXXX, KC_MUTE, XXXXXXX, XXXXXXX,                      TO_COLE, RGB_TOG, RGB_HUD, RGB_SAD, RGB_VAD, XXXXXXX,
+      KC_SLEP, XXXXXXX, XXXXXXX, KC_MUTE, XXXXXXX, XXXXXXX,                      TO_DFLT, RGB_TOG, RGB_HUD, RGB_SAD, RGB_VAD, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                           _______, _______, _______,    _______, _______, _______
                                       //`--------------------------'  `--------------------------'
