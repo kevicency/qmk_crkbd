@@ -20,20 +20,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-//#define USE_MATRIX_I2C
-
-/* Select hand configuration */
-
-// #define MASTER_LEFT
-// #define MASTER_RIGHT
-// #define EE_HANDS
+#define MASTER_LEFT
+#define USE_MATRIX_I2C
+#define SPLIT_LAYER_STATE_ENABLE
 
 #define BOTH_SHIFTS_TURNS_ON_CAPS_WORD
-
 #define IGNORE_MOD_TAP_INTERRUPT
 #define RETRO_TAPPING
 #define TAPPING_TERM 175
 #define TAPPING_TOGGLE 2
+#define PERMISSIVE_HOLD
+#define IGNORE_MOD_TAP_INTERRUPT
 
 #define MOUSEKEY_INTERVAL       20
 #define MOUSEKEY_DELAY          10
@@ -42,31 +39,33 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MOUSEKEY_WHEEL_DELAY    10
 
 #ifdef RGBLIGHT_ENABLE
+    #define RGBLIGHT_LAYERS
+
+    #define RGBLIGHT_LIMIT_VAL 128
+    #define RGBLIGHT_HUE_STEP 10
+    #define RGBLIGHT_SAT_STEP 10
+    #define RGBLIGHT_VAL_STEP 10
+    #define RGBLIGHT_DEFAULT_HUE 205
+    #define RGBLIGHT_SLEEP true
     #define RGBLIGHT_EFFECT_BREATHING
     #define RGBLIGHT_EFFECT_RAINBOW_MOOD
-    #define RGBLIGHT_EFFECT_STATIC_GRADIENT
-    #define RGBLIGHT_LIMIT_VAL 120
-    #define RGBLIGHT_HUE_STEP 10
-    #define RGBLIGHT_SAT_STEP 17
-    #define RGBLIGHT_VAL_STEP 17
-    #define RGBLIGHT_DEFAULT_HUE 215
-    #define RGBLIGHT_DEFAULT_MODE RGBLIGHT_MODE_BREATHING
-    #define RGBLIGHT_SLEEP true
+
+    #define RGBLIGHT_EFFECT_BREATHE_MAX 128
 #endif
 
 #ifdef RGB_MATRIX_ENABLE
+    #define RGB_MATRIX_FRAMEBUFFER_EFFECTS 
     #define RGB_MATRIX_KEYPRESSES
-    #define RGB_MATRIX_FRAMEBUFFER_EFFECTS
     #define RGB_DISABLE_WHEN_USB_SUSPENDED
     #define RGB_MATRIX_MAXIMUM_BRIGHTNESS 120
     #define RGB_MATRIX_HUE_STEP 8
     #define RGB_MATRIX_SAT_STEP 8
     #define RGB_MATRIX_VAL_STEP 5
     #define RGB_MATRIX_SPD_STEP 10
-    
-    // Effects
-    #define ENABLE_RGB_MATRIX_BREATHING
-    #define RGB_MATRIX_SOLID_REACTIVE_SIMPLE
-#endif 
+
+    // Effects 
+    #define ENABLE_RGB_MATRIX_HUE_BREATHING
+    #define ENABLE_RGB_MATRIX_TYPING_HEATMAP
+#endif
 
 #define OLED_FONT_H "keyboards/crkbd/lib/glcdfont.c"

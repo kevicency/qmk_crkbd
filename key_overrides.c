@@ -1,5 +1,6 @@
 #include QMK_KEYBOARD_H
 
+#ifdef KEY_OVERRIDE_ENABLE
 // const key_override_t ctrl_f = ko_make_basic(MOD_MASK_CTRL, KC_F, KC_RGHT); //MocOS Desktop Navigation
 // const key_override_t ctrl_n = ko_make_basic(MOD_MASK_CTRL, KC_N, KC_DOWN);  //MocOS Desktop Navigation
 // const key_override_t ctrl_p = ko_make_basic(MOD_MASK_CTRL, KC_P, KC_UP);  //MocOS Desktop Navigation

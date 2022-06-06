@@ -18,22 +18,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include QMK_KEYBOARD_H
 #include <stdio.h>
+#include "layers.h"
+#include "tap_dance.h"
 
-enum layers {
-    _COLEMAK = 0,
-    _GAMING,
-    _GAMING_EXT,
-    _SYM,
-    _NUM,
-    _NAV,
-    _UTIL,
-};
+#ifdef OLED_ENABLE
+    #include "oled.h"
+#endif
 
-enum tap_dance_codes {
-    DANCE_DOT_COMM,
-    DANCE_TAB,
-    DANCE_SLSH_TILDE
-};
+#ifdef RGBLIGHT_ENABLE
+    #include "rgb.h"
+#endif
 
 // Base Layers
 #define COLEMAK DF(_COLEMAK)
@@ -88,6 +82,7 @@ enum tap_dance_codes {
 #define TD_TAB TD(DANCE_TAB)
 #define TD_SLSH TD(DANCE_SLSH_TILDE)
 
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_COLEMAK] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
@@ -136,16 +131,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                           KC_LSFT, _______, _______,    _______,   S_SYM, _______
                                       //`--------------------------'  `--------------------------'
   ),
- 
+
   [_NUM] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-       KC_TAB, XXXXXXX, KC_LPRN, KC_UP,   KC_RPRN, KC_PGUP,                         KC_R,    KC_7,    KC_8,    KC_9, KC_MINS, KC_PLUS,
+       KC_TAB, XXXXXXX, KC_LPRN, KC_UP,   KC_RPRN, KC_PGUP,                         KC_R,    KC_7,    KC_8,    KC_9, KC_PLUS, KC_MINS,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       _______, XXXXXXX, KC_LEFT, KC_DOWN, KC_RGHT, KC_PGDN,                       KC_EQL,    KC_4,    KC_5,    KC_6, KC_ASTR, _______,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      _______, KC_UNDO,  KC_CUT,  KC_CPY,  TD_DOT,  KC_PST,                         KC_0,    KC_1,    KC_2,    KC_3, KC_SLSH, _______,
+      _______, KC_UNDO,  KC_CUT,  KC_CPY,  TD_DOT,  KC_PST,                         KC_0,    KC_1,    KC_2,    KC_3, KC_SLSH,  KC_DEL,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          _______,   S_NUM, _______,    _______, _______, _______
+                                          _______,   S_NUM, _______,    _______, _______, KC_RSFT
                                       //`--------------------------'  `--------------------------'
   ),
 
@@ -167,7 +162,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       _______, KC_BRMD, KC_MPLY, KC_VOLD, KC_MSTP, COLEMAK,                      TO_DFLT, RGB_MOD, RGB_HUI, RGB_SAI, RGB_VAI, _______,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_SLEP, XXXXXXX, XXXXXXX, KC_MUTE, XXXXXXX, XXXXXXX,                      TO_DFLT, RGB_TOG, RGB_HUD, RGB_SAD, RGB_VAD, XXXXXXX,
+       EE_CLR, XXXXXXX, XXXXXXX, KC_MUTE, XXXXXXX, XXXXXXX,                      TO_DFLT, RGB_TOG, RGB_HUD, RGB_SAD, RGB_VAD, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                           _______, _______, _______,    _______, _______, _______
                                       //`--------------------------'  `--------------------------'
@@ -180,239 +175,24 @@ layer_state_t layer_state_set_user(layer_state_t state) {
             state = update_tri_layer_state(state, _SYM, _NUM, _NAV);
             break;
     }
+
+    #ifdef RGBLIGHT_ENABLE
+        rgb_set_layer_state(state);
+    #endif
+
     return state;
 }
 
-#ifdef OLED_ENABLE
-    oled_rotation_t oled_init_user(oled_rotation_t rotation) {
-        if (!is_keyboard_master()) {
-            return OLED_ROTATION_180;
-        }
-        return rotation;
-    }
-
-    void oled_render_layer_state(void) {
-        // oled_write_P(PSTR("Layer"), false);
-        switch (get_highest_layer(default_layer_state)) {
-            case _COLEMAK:
-                oled_write_P(PSTR("COLEMAK: "), false);
-                break;
-            case _GAMING:
-                oled_write_P(PSTR("GAMING:  "), false);
-                break;
-        }
-        // oled_write_ln_P(PSTR(layer_state), false);
-        switch (get_highest_layer(layer_state|default_layer_state)) {
-            case _COLEMAK:
-            case _GAMING:
-                oled_write_ln_P(PSTR("Base "), false);
-                break;
-            case _GAMING_EXT:
-                oled_write_ln_P(PSTR("Ext  "), false);
-                break;
-            case _SYM:
-                oled_write_ln_P(PSTR("Sym  "), false);
-                break;
-            case _NUM:
-                oled_write_ln_P(PSTR("Num  "), false);
-                break;
-            case _NAV:
-                oled_write_ln_P(PSTR("Nav  "), false);
-                break;
-            case _UTIL:
-                oled_write_ln_P(PSTR("Util "), false);
-                break;
-            default:
-                oled_write_P(PSTR("Unkn "), false);
-            break;
-        }
-        oled_write_P(PSTR("\n"), false);
-
-        uint8_t modifiers = get_mods();
-
-        oled_write_P((modifiers & MOD_MASK_SHIFT) ? PSTR("SHFT ") : PSTR(""), false);
-        oled_write_P((modifiers & MOD_MASK_CTRL) ? PSTR("CTRL ") : PSTR(""), false);
-        oled_write_P((modifiers & MOD_MASK_ALT) ? PSTR("ALT  ") : PSTR(""), false);
-        oled_write_P((modifiers & MOD_MASK_GUI) ? PSTR("CMD  ") : PSTR(""), false);
-    }
-
-
-    char keylog_str[12] = {};
-
-    const char code_to_name[60] = {
-        ' ', ' ', ' ', ' ', 'a', 'b', 'c', 'd', 'e', 'f',
-        'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
-        'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-        '1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
-        'R', 'E', 'B', 'T', '_', '-', '=', '[', ']', '\\',
-        '#', ';', '\'', '`', ',', '.', '/', ' ', ' ', ' '};
-
-    void set_keylog(uint16_t keycode, keyrecord_t *record) {
-        char name = ' ';
-            if ((keycode >= QK_MOD_TAP && keycode <= QK_MOD_TAP_MAX) ||
-                (keycode >= QK_LAYER_TAP && keycode <= QK_LAYER_TAP_MAX)) { keycode = keycode & 0xFF; }
-        if (keycode < 60) {
-            name = code_to_name[keycode];
-    }
-
-    // update keylog
-    snprintf(keylog_str, sizeof(keylog_str), "%c: k%2d",
-            name, keycode);
-    }
-
-    void oled_render_keylog(void) {
-        oled_write(keylog_str, false);
-    }
-
-    void render_bootmagic_status(bool status) {
-        /* Show Ctrl-Gui Swap options */
-        static const char PROGMEM logo[][2][3] = {
-            {{0x97, 0x98, 0}, {0xb7, 0xb8, 0}},
-            {{0x95, 0x96, 0}, {0xb5, 0xb6, 0}},
-        };
-        if (status) {
-            oled_write_ln_P(logo[0][0], false);
-            oled_write_ln_P(logo[0][1], false);
-        } else {
-            oled_write_ln_P(logo[1][0], false);
-            oled_write_ln_P(logo[1][1], false);
-        }
-    }
-
-    void oled_render_logo(void) {
-        static const char PROGMEM crkbd_logo[] = {
-            0x80, 0x81, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89, 0x8a, 0x8b, 0x8c, 0x8d, 0x8e, 0x8f, 0x90, 0x91, 0x92, 0x93, 0x94,
-            0xa0, 0xa1, 0xa2, 0xa3, 0xa4, 0xa5, 0xa6, 0xa7, 0xa8, 0xa9, 0xaa, 0xab, 0xac, 0xad, 0xae, 0xaf, 0xb0, 0xb1, 0xb2, 0xb3, 0xb4,
-            0xc0, 0xc1, 0xc2, 0xc3, 0xc4, 0xc5, 0xc6, 0xc7, 0xc8, 0xc9, 0xca, 0xcb, 0xcc, 0xcd, 0xce, 0xcf, 0xd0, 0xd1, 0xd2, 0xd3, 0xd4,
-            0};
-        oled_write_P(crkbd_logo, false);
-    }
-
-    bool oled_task_user(void) {
-        if (is_keyboard_master()) {
-            oled_render_layer_state();
-            oled_render_keylog();
-        } else {
-            oled_render_logo();
-        }
-        return false;
-    }
-#endif
-
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     #ifdef OLED_ENABLE
-    if (record->event.pressed) {
-        set_keylog(keycode, record);
-    }
+        oled_process_record(keycode, record);
     #endif
     return true;
 }
 
-
-typedef struct {
-    bool is_press_action;
-    uint8_t step;
-} tap;
-
-enum {
-    SINGLE_TAP = 1,
-    SINGLE_HOLD,
-    DOUBLE_TAP,
-    DOUBLE_HOLD,
-    DOUBLE_SINGLE_TAP,
-    MORE_TAPS
-};
-
-static tap dance_state[2];
-
-uint8_t dance_step(qk_tap_dance_state_t *state);
-uint8_t dance_step(qk_tap_dance_state_t *state) {
-    if (state->count == 1) {
-        if (state->interrupted || !state->pressed) return SINGLE_TAP;
-        else return SINGLE_HOLD;
-    } else if (state->count == 2) {
-        if (state->interrupted) return DOUBLE_SINGLE_TAP;
-        else if (state->pressed) return DOUBLE_HOLD;
-        else return DOUBLE_TAP;
-    }
-    return MORE_TAPS;
+void keyboard_post_init_user(void) {
+    #ifdef RGBLIGHT_ENABLE
+        rgb_keyboard_post_init();
+    #endif
 }
 
-
-void on_dance_tab(qk_tap_dance_state_t *state, void *user_data);
-void dance_tab_finished(qk_tap_dance_state_t *state, void *user_data);
-void dance_tab_reset(qk_tap_dance_state_t *state, void *user_data);
-
-void on_dance_tab(qk_tap_dance_state_t *state, void *user_data) {
-    if(state->count == 3) {
-        tap_code16(KC_TAB);
-        tap_code16(KC_TAB);
-        tap_code16(KC_TAB);
-    }
-    if(state->count > 3) {
-        tap_code16(KC_TAB);
-    }
-}
-
-void dance_tab_finished(qk_tap_dance_state_t *state, void *user_data) {
-    dance_state[0].step = dance_step(state);
-    switch (dance_state[0].step) {
-        case SINGLE_TAP: register_code16(KC_TAB); break;
-        case SINGLE_HOLD: break;
-        case DOUBLE_TAP: register_code16(KC_TAB); register_code16(KC_TAB); break;
-        case DOUBLE_HOLD: layer_move(_UTIL); break;
-        case DOUBLE_SINGLE_TAP: tap_code16(KC_TAB); register_code16(KC_TAB);
-    }
-}
-
-void dance_tab_reset(qk_tap_dance_state_t *state, void *user_data) {
-    wait_ms(10);
-    switch (dance_state[0].step) {
-        case SINGLE_TAP: unregister_code16(KC_TAB); break;
-        case DOUBLE_TAP: unregister_code16(KC_TAB); break;
-        case DOUBLE_SINGLE_TAP: unregister_code16(KC_TAB); break;
-    }
-    dance_state[0].step = 0;
-}
-
-void on_dance_slsh(qk_tap_dance_state_t *state, void *user_data);
-void dance_slsh_finished(qk_tap_dance_state_t *state, void *user_data);
-void dance_slsh_reset(qk_tap_dance_state_t *state, void *user_data);
-
-void on_dance_slsh(qk_tap_dance_state_t *state, void *user_data) {
-	if(state->count == 3) {
-		tap_code16(KC_SLASH);
-		tap_code16(KC_SLASH);
-		tap_code16(KC_SLASH);
-	}
-	if(state->count > 3) {
-		tap_code16(KC_SLASH);
-	}
-}
-
-void dance_slsh_finished(qk_tap_dance_state_t *state, void *user_data) {
-    dance_state[1].step = dance_step(state);
-	switch (dance_state[1].step) {
-		case SINGLE_TAP: register_code16(KC_SLASH); break;
-		case SINGLE_HOLD: register_code16(S(KC_TILDE)); break;
-		case DOUBLE_TAP: register_code16(KC_SLASH); register_code16(KC_SLASH); break;
-		case DOUBLE_SINGLE_TAP: tap_code16(KC_SLASH); register_code16(KC_SLASH);
-	}
-}
-
-void dance_slsh_reset(qk_tap_dance_state_t *state, void *user_data) {
-	wait_ms(10);
-	switch (dance_state[1].step) {
-		case SINGLE_TAP: unregister_code16(KC_SLASH); break;
-		case SINGLE_HOLD: unregister_code16(S(KC_TILDE)); break;
-		case DOUBLE_TAP: unregister_code16(KC_SLASH); break;
-		case DOUBLE_SINGLE_TAP: unregister_code16(KC_SLASH); break;
-	}
-	dance_state[1].step = 0;
-}
-
-qk_tap_dance_action_t tap_dance_actions[] = {
-    [DANCE_DOT_COMM] = ACTION_TAP_DANCE_DOUBLE(KC_DOT, KC_COMM),
-    [DANCE_TAB] = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_tab, dance_tab_finished, dance_tab_reset),
-    [DANCE_SLSH_TILDE] = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_slsh, dance_slsh_finished, dance_slsh_reset),
-};
