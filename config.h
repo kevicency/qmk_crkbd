@@ -47,10 +47,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     #define RGBLIGHT_VAL_STEP 10
     #define RGBLIGHT_DEFAULT_HUE 205
     #define RGBLIGHT_SLEEP true
+
     #define RGBLIGHT_EFFECT_BREATHING
     #define RGBLIGHT_EFFECT_RAINBOW_MOOD
-
     #define RGBLIGHT_EFFECT_BREATHE_MAX 128
+
+    #define RGBLIGHT_DEFAULT_MODE RGBLIGHT_MODE_BREATHING
 #endif
 
 #ifdef RGB_MATRIX_ENABLE

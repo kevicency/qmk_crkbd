@@ -1,6 +1,8 @@
 #include QMK_KEYBOARD_H
 #include "layers.h"
 
+#define HSV_BLOODORANGE 13, 255, 255
+
 const rgblight_segment_t PROGMEM rgb_num_layer[] = RGBLIGHT_LAYER_SEGMENTS(
     {0, 10, HSV_CHARTREUSE},
     {27, 10, HSV_CHARTREUSE}
@@ -17,8 +19,8 @@ const rgblight_segment_t PROGMEM rgb_nav_layer[] = RGBLIGHT_LAYER_SEGMENTS(
 );
 
 const rgblight_segment_t PROGMEM rgb_util_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {0, 10, HSV_ORANGE},
-    {27, 10, HSV_ORANGE}
+    {0, 10, HSV_BLOODORANGE},
+    {27, 10, HSV_BLOODORANGE}
 );
 
 const rgblight_segment_t* const PROGMEM rgb_layers[] = RGBLIGHT_LAYERS_LIST(
