@@ -78,6 +78,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KC_UNDO LGUI(KC_Z)
 #define KC_PST LGUI(KC_V)
 #define KC_EUR ALGR(KC_5)   
+#define KC_SEL LGUI(KC_A)
 
 #define TD_DOT TD(DANCE_DOT_COMM)
 #define TD_TAB TD(DANCE_TAB)
@@ -87,7 +88,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_COLEMAK] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-       TD_TAB,    KC_Q,    KC_W,    KC_F,    KC_P,    KC_B,                         KC_J,    KC_L,    KC_U,    KC_Y, KC_SCLN, KC_QUOT,
+       KC_TAB,    KC_Q,    KC_W,    KC_F,    KC_P,    KC_B,                         KC_J,    KC_L,    KC_U,    KC_Y, KC_SCLN, KC_QUOT,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
        KC_ESC,    KC_A,    KC_R,    MT_S,    MT_T,    KC_G,                         KC_M,    MT_N,    MT_E,    KC_I,    KC_O,  KC_ENT,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
@@ -152,19 +153,21 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       _______,   KC_LT, KC_LCBR, KC_LBRC, KC_LPRN, KC_PIPE,                      KC_BSLS, KC_RPRN, KC_RBRC, KC_RCBR,   KC_GT, _______,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-       KC_EQL, KC_PLUS, KC_MINS, KC_TILD,   KC_0, KC_LEFT,                      KC_RGHT,    KC_1, KC_COMM,  KC_DOT, KC_SLSH,  KC_RCTL,
+       KC_EQL, KC_TILD, KC_PLUS, KC_MINS,    KC_0, KC_LEFT,                      KC_RGHT,    KC_1, KC_COMM,  KC_DOT, KC_SLSH,  KC_RCTL,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                           KC_LSFT, _______, _______,    _______,   S_SYM, _______
                                       //`--------------------------'  `--------------------------'
   ),
 
+  
+
   [_NUM] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-       KC_TAB, XXXXXXX, KC_LPRN, KC_UP,   KC_RPRN, KC_PGUP,                         KC_R,    KC_7,    KC_8,    KC_9, KC_PLUS, KC_MINS,
+       KC_TAB, XXXXXXX, KC_HOME, KC_UP,    KC_END, KC_PGUP,                         KC_R,   KC_P7,   KC_P8,   KC_P9, KC_PLUS, KC_ASTR,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      _______, XXXXXXX, KC_LEFT, KC_DOWN, KC_RGHT, KC_PGDN,                       KC_EQL,    KC_4,    KC_5,    KC_6, KC_ASTR, _______,
+      _______,  KC_SEL, KC_LEFT, KC_DOWN, KC_RGHT, KC_PGDN,                       KC_EQL,   KC_P4,   KC_P5,   KC_P6, KC_MINS, _______,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-       KC_EQL, KC_UNDO,  KC_CUT,  KC_CPY,  TD_DOT,  KC_PST,                         KC_0,    KC_1,    KC_2,    KC_3, KC_SLSH,  KC_DEL,
+       KC_EQL, KC_UNDO,  KC_CUT,  KC_CPY,  TD_DOT,  KC_PST,                         KC_P0,  KC_P1,   KC_P2,   KC_P3, KC_SLSH,  KC_DEL,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                           _______,   S_NUM, _______,    _______, _______, KC_RSFT
                                       //`--------------------------'  `--------------------------'
@@ -174,9 +177,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
        TD_TAB, XXXXXXX, KC_WH_L, KC_MS_U, KC_WH_R, KC_WH_U,                      NAV_BCK, TAB_BCK, TAB_FWD, NAV_FWD, TAB_CLS,  TO_NAV,      
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      _______, XXXXXXX, KC_MS_L, KC_MS_D, KC_MS_R, KC_WH_D,                       TO_NAV, KC_BTN1, KC_BTN2, KC_BTN3, KC_RGUI, _______,
+      _______,  KC_SEL, KC_MS_L, KC_MS_D, KC_MS_R, KC_WH_D,                       TO_NAV, KC_BTN1, KC_BTN2, KC_BTN3, KC_RGUI, _______,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      _______, KC_UNDO,  KC_CUT, KC_COPY,  TD_DOT,  KC_PST,                      TO_UTIL, KC_ACL0, KC_ACL1, KC_ACL2, XXXXXXX, _______,
+      _______, KC_UNDO,  KC_CUT,  KC_CPY,  TD_DOT,  KC_PST,                      TO_UTIL, KC_ACL0, KC_ACL1, KC_ACL2, XXXXXXX, _______,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                           KC_LSFT, _______, _______,    _______, _______, KC_RSFT
                                       //`--------------------------'  `--------------------------'
