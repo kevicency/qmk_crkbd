@@ -32,11 +32,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define PERMISSIVE_HOLD
 #define IGNORE_MOD_TAP_INTERRUPT
 
-#define MK_KINETIC_SPEED
-#define MOUSEKEY_INTERVAL       13
-#define MOUSEKEY_DELAY          10
-#define MOUSEKEY_TIME_TO_MAX    45
-#define MOUSEKEY_MAX_SPEED      8
+#define MOUSEKEY_DELAY          1
+#define MOUSEKEY_INTERVAL       16
+#define MOUSEKEY_TIME_TO_MAX    32
+#define MOUSEKEY_MAX_SPEED      42
+#define MOUSEKEY_FRICTION       24
+
+#define MOUSEKEY_MOVE_DELTA     1
+#define MOUSEKEY_INITIAL_SPEED  80
+#define MOUSEKEY_BASE_SPEED     2500
+#define MOUSEKEY_ACCELERATED_SPEED     3500
+#define MOUSEKEY_WHEEL_INITIAL_MOVEMENTS 8
 #define MOUSEKEY_WHEEL_DELAY    10
 #define MOUSEKEY_WHEEL_TIME_TO_MAX 0
 
